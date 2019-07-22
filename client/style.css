@@ -1,0 +1,62 @@
+/* *{
+    border:black solid 1px
+} */
+
+a{
+    text-decoration: none;
+    color:black
+}
+button:hover{
+    background-color: rgb(194, 190, 190);
+    text-decoration:none;
+}
+button:active{
+    text-decoration:none;
+    background-color:white
+}
+.article-navigation:hover{
+    background-color: rgb(194, 190, 190);
+    text-decoration: none
+}  
+.article-navigation:active{
+    background-color:white
+}
+
+input[type=text] {
+    background-color: white;
+    background-repeat: no-repeat;
+    padding-left: 20px
+  }
+  .chip {
+    display: inline-block;
+    padding: 0 10px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    border-radius: 25px;
+    background-color: #cffdce;
+  }
+  .chip.blunt{
+    color: #bbbbbb;
+    background-color: #f0efef;
+    font-size: 12px;
+  }
+  .chip.button{
+    cursor: pointer;
+  }
+  .chip.button:hover{
+    background-color: #b8fab6;
+    color:black
+  }
+  .closebtn {
+    padding-left: 10px;
+    color: #888;
+    font-weight: bold;
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .closebtn:hover {
+    color: #000;
+  }

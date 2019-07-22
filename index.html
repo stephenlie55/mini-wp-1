@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./vueWysiwyg.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./favicon.png">
+
+    <!-- Font Awesome JS -->
+    <script src="https://kit.fontawesome.com/1edeb3b72e.js"></script>
+    <title>MiniWP</title>
+</head>
+<body>
+    <div id="app">
+        <div v-if="isLogin === false">
+            <div class="container">
+                <div class="row" style="text-align: center; padding: 150px">
+                    <form id="formLogin" @submit.prevent="login" style="margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto;">
+                        <h5><strong>WORDPRESS</strong><i>mini</i></h5>
+                        <br>
+                        <div class="form-group" style="width: 650px;">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" v-model="user.username" aria-describedby="usernameHelp" placeholder="Username">
+                            <small id="userameHelp" class="form-text text-muted">Your username.</small>
+                        </div>
+                        <div class="form-group" style="width: 650px;">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" v-model="user.password" placeholder="Password">
+                        </div>
+                    
+                        <div class="g-signin2" data-onsuccess="onSignIn" style="position: absolute !important; margin-left: auto; margin-right: auto;"></div>
+                        <button type="submit" class="btn btn-primary" style="margin-left: auto; margin-right: auto; background: #E9ECEF; color: black; border: #E9ECEF; left: 22px">Submit</button><br>
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#formregister" aria-expanded="false">Or register here?</button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+    
+            <!-- register modal -->
+            <div class="modal fade" id="formregister" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header border-bottom-0">
+                            <h5 class="modal-title" id="exampleModalLabel">Create Account</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="formRegister">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="usernameRegister">Username</label>
+                                    <input type="text" class="form-control" id="usernameRegister" aria-describedby="emailHelp" placeholder="username..">
+                                    <small id="emailHelp" class="form-text text-muted">Your new username</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="passwordRegister">Password</label>
+                                    <input type="password" class="form-control" id="passwordRegister" placeholder="Password">
+                                </div>                             
+                            </div>
+                            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-primary" style="margin-left: auto; margin-right: auto; background: #E9ECEF; color: black; border: #E9ECEF; left: 22px">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="" onClick="history.go(0)"><img src="wp.png" style="height: 40px; width: 40px"></a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="" data-toggle="modal" data-target="#form" aria-expanded="false" aria-controls="collapseExample">
+                                <i class='far fa-edit'></i> Write
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i>{{activeUser}}</i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="" data-toggle="popover" title="Click to see user's post" data-trigger="hover" data-content="">My Post</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" id="logout" @click.prevent="logout" href="">Logout</a>
+                            </div>
+                        </li>
+
+                        <li style="position: absolute; right: 15px !important">
+                            <!-- Search -->
+                            <form id="formSearch" class="form-inline">
+                                <div class="input-group">
+                                    <div class="input-group-prepend" >
+                                        <a type="submit" data-toggle="popover" title="put '#' before value for searching article by its tag" data-trigger="hover" data-content="" style="width: 40px"><span class="input-group-text" id="basic-addon1" @click="change">{{searchType}}</span></a>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search . . ." aria-label="Search" id="contentSearch" v-model="keywords" aria-describedby="basic-addon1">
+                                </div>
+                            </form>
+                            
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Create article modal -->
+                <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header border-bottom-0">
+                                <h5 class="modal-title" id="exampleModalLabel">Write article</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form @submit.prevent="submitArticle" >
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="title">Title:</label>
+                                        <input type="text" class="form-control" v-model="article.title">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="article">Write about what you think down here:</label>
+                                        <wysiwyg v-model="article.content"></wysiwyg>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tag">Tag:</label>
+                                        <input type="text" class="form-control" v-model="article.tag">
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-light" style="border-color: #E9ECEF; position: absolute; right: 15px; bottom: 15px" data-dismiss="modal">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Header -->
+            <div class="jumbotron text-center" style="height:200px">
+                <h1><strong>WORDPRESS</strong><i>mini</i></h1>
+                <p>Place where writer share their ideas!</p>
+            </div>
+                
+            <!-- Content -->
+            <div class="container">
+                <div class="row">
+        
+                    <!-- Article List -->
+                    <div class="col-md-4 text-center" style="border: 2px; border-color: #E9ECEF">
+                        <h5 style="margin-bottom: 10px">Articles written by: <br><strong>{{activeUser}}</strong></h5>
+                        <ul class="list-group" id="projectList">
+            
+                        </ul>
+                    </div>
+        
+                    <!-- Article's detail -->
+                    <div class="col-md-8" id="articleDetail">
+                    <h5 class="item text-center">Detail</h5>
+
+                </div>
+            </div> 
+        </div>
+    </div>
+    
+    <div class="toast" id="toastInfo" style="position: absolute; bottom: 22px; left: 22px"></div>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+
+    <!-- Vue JS -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="./js/vueWysiwyg.js"></script>
+    <script src="./js/vue.js"></script>
+
+
+</body>
+</html>
